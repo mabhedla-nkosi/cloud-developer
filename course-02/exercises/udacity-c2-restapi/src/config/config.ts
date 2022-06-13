@@ -1,7 +1,7 @@
 export const config = {
   "dev": {
-    "username": process.env.POSTGRES_USERNAME,
-    "password": process.env.POSTGRES_PASSWORD,
+    "username": process.env.POSTGRES_NAME,
+    "password": process.env.POSTGRES_WORD,
     "database": process.env.POSTGRES_DATABASE,
     "host": process.env.POSTGRES_HOST,
     "dialect": "postgres",
@@ -15,7 +15,7 @@ export const config = {
   "prod": {
     "username": "",
     "password": "",
-    "database": "",
+    "database": "udagram_prod",
     "host": "",
     "dialect": "postgres"
   }

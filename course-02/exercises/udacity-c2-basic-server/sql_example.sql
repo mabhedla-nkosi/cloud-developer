@@ -36,3 +36,8 @@ SELECT cars.type, cars.cost, cars.model, make.name
   INNER JOIN make ON (cars.make_id = make.id)
   WHERE make.name = 'toyota'
   ORDER BY cost DESC  LIMIT 30;
+
+CREATE TABLE "public"."make_model" (
+  id SERIAL PRIMARY KEY,
+  manufacture_name TEXT
+);

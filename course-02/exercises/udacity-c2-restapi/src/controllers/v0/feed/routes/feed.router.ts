@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { FeedItem } from '../models/FeedItem';
 import { requireAuth } from '../../users/routes/auth.router';
 import * as AWS from '../../../../aws';
+import { reduce } from 'bluebird';
 
 const router: Router = Router();
 
@@ -18,13 +19,51 @@ router.get('/', async (req: Request, res: Response) => {
 
 //@TODO
 //Add an endpoint to GET a specific resource by Primary Key
+router.get('/:id',
+    requireAuth,
+    async(req: Request, res:Response)=>{
+        //res.status(200).send(req.params.id);
+        let id = req.params.id;
+        console.log(id);
+        let project = await FeedItem.findByPk(id);
+        if (project === null) {
+          res.status(404).send("Not found!");
+        } else {
+            res.status(200).json({project});
+        }    
+    });
 
 // update a specific resource
 router.patch('/:id', 
     requireAuth, 
     async (req: Request, res: Response) => {
         //@TODO try it yourself
-        res.status(500).send("not implemented")
+        let identity=req.params.id;
+        let cptn=req.body.caption;
+        let urlV=req.body.url;
+        const project = await FeedItem.findOne({ where: { id: identity } });
+        if(project===null){
+            res.status(404).send("Not found. Write the correct Id.");
+        }else{
+            project.update({caption:cptn});
+            project.update({url:urlV});
+            await FeedItem.update({ caption:cptn }, {
+                where: {
+                  id: identity
+                }
+              });
+
+            await FeedItem.update({ url:urlV }, {
+                where: {
+                  id: identity
+                }
+              });
+            // project.caption=cptn;
+            // project.url=urlV;
+            // await project.save();
+        }
+        
+          res.status(204).send("record successfully updated");
 });
 
 
